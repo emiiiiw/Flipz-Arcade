@@ -72,7 +72,12 @@ export async function ensureFeedDensity(minCount = 12): Promise<void> {
 }
 
 export async function getPublicFeed(limit = 30) {
-  await ensureFeedDensity();
+  try {
+    await ensureFeedDensity();
+  } catch (e) {
+    console.warn("[activityFeed] ensureFeedDensity skipped:", e);
+  }
+
   const rows = await prisma.activityFeedEvent.findMany({
     orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
     take: limit,
