@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { VERIFY_AMOUNT } from "@/lib/constants";
+import { errorMessageFromBody, isSuccessBody, safeJson } from "@/lib/safeJson";
 
 export default function LoginPage() {
   const [routing, setRouting] = useState("");
@@ -11,18 +12,56 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<"new" | "return">("new");
 
+  async function lookupRouting(): Promise<{ ok: boolean; message?: string }> {
+    const res = await fetch("/api/fleeca/lookup-routing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ routingNumber: routing.trim() }),
+    });
+    const data = await safeJson(res);
+    console.log("lookup-routing response status", res.status);
+    console.log("lookup-routing response body", data);
+
+    if (!res.ok || !isSuccessBody(data)) {
+      return {
+        ok: false,
+        message: errorMessageFromBody(data, `Routing lookup failed (HTTP ${res.status})`),
+      };
+    }
+    return { ok: true };
+  }
+
   async function verifyNew() {
     setBusy(true);
     setError(null);
     try {
+      const lookup = await lookupRouting();
+      if (!lookup.ok) {
+        setError(lookup.message ?? "Invalid routing number");
+        return;
+      }
+
       const res = await fetch("/api/auth/verify-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ routing }),
+        body: JSON.stringify({ routingNumber: routing.trim() }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "failed");
-      window.open(data.paymentLink as string, "_blank", "noopener,noreferrer");
+      const data = await safeJson(res);
+      console.log("verify-payment response status", res.status);
+      console.log("verify-payment response body", data);
+
+      if (!res.ok || !isSuccessBody(data)) {
+        throw new Error(
+          errorMessageFromBody(data, `Verification failed (HTTP ${res.status})`),
+        );
+      }
+
+      const paymentLink = (data as Record<string, unknown>).paymentLink;
+      if (typeof paymentLink !== "string" || !paymentLink) {
+        throw new Error("No payment link returned from server");
+      }
+
+      window.open(paymentLink, "_blank", "noopener,noreferrer");
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -34,13 +73,27 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/login", {
+      const lookup = await lookupRouting();
+      if (!lookup.ok) {
+        setError(lookup.message ?? "Invalid routing number");
+        return;
+      }
+
+      const res = await fetch("/api/auth/returning-player", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ routing }),
+        body: JSON.stringify({ routingNumber: routing.trim() }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "failed");
+      const data = await safeJson(res);
+      console.log("login response status", res.status);
+      console.log("login response body", data);
+
+      if (!isSuccessBody(data)) {
+        throw new Error(
+          errorMessageFromBody(data, `Sign-in failed (HTTP ${res.status})`),
+        );
+      }
+
       window.location.href = "/lobby";
     } catch (e) {
       setError((e as Error).message);
@@ -93,6 +146,8 @@ export default function LoginPage() {
             value={routing}
             onChange={(e) => setRouting(e.target.value)}
             placeholder="123456789"
+            inputMode="numeric"
+            autoComplete="off"
           />
         </label>
 
@@ -100,8 +155,8 @@ export default function LoginPage() {
           <>
             <button
               type="button"
-              disabled={busy || !routing}
-              onClick={verifyNew}
+              disabled={busy || !routing.trim()}
+              onClick={() => void verifyNew()}
               className="mt-6 w-full rounded-xl bg-gradient-to-r from-flipz-pink to-flipz-cyan py-3 text-lg font-semibold text-black disabled:opacity-40"
             >
               {busy ? "Working…" : "Verify with Fleeca"}
@@ -114,8 +169,8 @@ export default function LoginPage() {
         ) : (
           <button
             type="button"
-            disabled={busy || !routing}
-            onClick={loginReturn}
+            disabled={busy || !routing.trim()}
+            onClick={() => void loginReturn()}
             className="mt-6 w-full rounded-xl border border-flipz-cyan py-3 text-lg font-semibold text-flipz-cyan disabled:opacity-40"
           >
             {busy ? "Signing in…" : "Continue to lobby"}

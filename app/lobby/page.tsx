@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Wallet } from "@/components/Wallet";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { useSessionStore } from "@/store/session";
+import { errorMessageFromBody, isSuccessBody, safeJson } from "@/lib/safeJson";
 
 const games = [
   {
@@ -50,15 +51,23 @@ function LobbyInner() {
 
   const refresh = useCallback(async () => {
     const res = await fetch("/api/session");
-    const data = await res.json();
-    if (data.authenticated) {
+    const data = await safeJson(res);
+    console.log("session response status", res.status);
+    console.log("session response body", data);
+    if (
+      isSuccessBody(data) &&
+      data &&
+      typeof data === "object" &&
+      (data as Record<string, unknown>).authenticated === true
+    ) {
+      const d = data as Record<string, unknown>;
       setFromServer({
-        sessionId: data.sessionId,
-        displayName: data.displayName,
-        balance: data.balance,
-        totalDeposited: data.totalDeposited,
-        totalWagered: data.totalWagered,
-        totalWon: data.totalWon,
+        sessionId: d.sessionId as string,
+        displayName: d.displayName as string,
+        balance: d.balance as number,
+        totalDeposited: d.totalDeposited as number,
+        totalWagered: d.totalWagered as number,
+        totalWon: d.totalWon as number,
       });
     }
   }, [setFromServer]);
@@ -70,8 +79,13 @@ function LobbyInner() {
   useEffect(() => {
     if (!routing) return;
     void (async () => {
-      const res = await fetch(`/api/auth/post-verify?routing=${encodeURIComponent(routing)}`);
-      if (res.ok) await refresh();
+      const res = await fetch(
+        `/api/auth/post-verify?routing=${encodeURIComponent(routing)}`,
+      );
+      const data = await safeJson(res);
+      console.log("post-verify response status", res.status);
+      console.log("post-verify response body", data);
+      if (isSuccessBody(data)) await refresh();
     })();
   }, [routing, refresh]);
 
@@ -83,9 +97,15 @@ function LobbyInner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: depAmount }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "failed");
-      window.open(data.paymentLink as string, "_blank", "noopener,noreferrer");
+      const data = await safeJson(res);
+      console.log("deposit response status", res.status);
+      console.log("deposit response body", data);
+      if (!res.ok || !isSuccessBody(data)) {
+        throw new Error(errorMessageFromBody(data, `Deposit failed (HTTP ${res.status})`));
+      }
+      const paymentLink = (data as Record<string, unknown>).paymentLink;
+      if (typeof paymentLink !== "string") throw new Error("No payment link returned");
+      window.open(paymentLink, "_blank", "noopener,noreferrer");
       setDepositOpen(false);
     } catch (e) {
       alert((e as Error).message);
