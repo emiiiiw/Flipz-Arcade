@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { AdminAccessSection } from "@/components/AdminAccessSection";
 import { AppShell } from "@/components/AppShell";
 import { Wallet } from "@/components/Wallet";
 import { ActivityFeed } from "@/components/ActivityFeed";
@@ -166,6 +167,12 @@ function LobbyInner() {
             </Link>
           </motion.article>
         ))}
+      </section>
+
+      <section className="mt-16 border-t border-white/10 pt-12">
+        <div className="mx-auto max-w-md">
+          <AdminAccessSection />
+        </div>
       </section>
 
       {cashoutOpen && (

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 
 type Analytics = {
@@ -19,6 +20,7 @@ type Analytics = {
 const GAME_KEYS = ["global", "coinflip", "crash", "crossy", "higher_lower", "packs"];
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [settings, setSettings] = useState<Record<string, unknown>>({});
   const [selected, setSelected] = useState("coinflip");
@@ -72,6 +74,11 @@ export default function AdminDashboardPage() {
     void load();
   }
 
+  async function signOut() {
+    await fetch("/api/admin/login", { method: "DELETE" });
+    router.push("/admin");
+  }
+
   return (
     <AppShell className="max-w-6xl">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
@@ -79,9 +86,18 @@ export default function AdminDashboardPage() {
             <h1 className="text-3xl font-semibold text-gold">Economy Control Panel</h1>
             <p className="text-sm text-white/50">RTP, volatility, jackpots, pause toggles</p>
           </div>
-          <Link href="/lobby" className="flipz-link">
-            ← Arcade
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/lobby" className="flipz-link">
+              ← Arcade
+            </Link>
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              className="flipz-btn-ghost text-xs"
+            >
+              Sign out
+            </button>
+          </div>
         </header>
 
         {analytics && (

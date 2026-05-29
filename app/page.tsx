@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { AdminAccessSection } from "@/components/AdminAccessSection";
 import { AppShell } from "@/components/AppShell";
 import { VERIFY_AMOUNT } from "@/lib/constants";
 import { errorMessageFromBody, isSuccessBody, safeJson } from "@/lib/safeJson";
@@ -104,7 +105,10 @@ export default function LoginPage() {
   }
 
   return (
-    <AppShell centered>
+    <AppShell
+      centered
+      className="flex min-h-[calc(100vh-2rem)] flex-col items-center justify-center gap-8 py-10"
+    >
       <motion.main
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -184,6 +188,8 @@ export default function LoginPage() {
           House rules
         </Link>
       </motion.main>
+
+      <AdminAccessSection />
     </AppShell>
   );
 }
