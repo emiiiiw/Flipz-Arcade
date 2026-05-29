@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Economy Console — Premium Dashboard</title>
+    <link rel="stylesheet" href="DashboardUI.css" />
+  </head>
+  <body class="dashboard">
+    <div class="dashboard__shell">
+      <header class="dashboard__hero">
+        <p class="dashboard__logo">Virtual Economy Simulation</p>
+        <h1 style="margin: 0; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 300">
+          Institutional-grade <span style="color: var(--gold)">reward infrastructure</span>
+        </h1>
+
+        <div class="dashboard__headlines" aria-label="Marketing highlights">
+          <article class="headline-card">
+            <h2>Instantaneous Processing</h2>
+            <p>
+              Reward events settle in real time — no batch queues, no manual approval
+              delays. Your economy moves at market speed.
+            </p>
+          </article>
+          <article class="headline-card">
+            <h2>Total User Privacy</h2>
+            <p>
+              Tiered access and verification gates keep sensitive withdrawal paths
+              encrypted behind premium flags — users control what the system sees.
+            </p>
+          </article>
+          <article class="headline-card">
+            <h2>Competitive Reward Rates</h2>
+            <p>
+              Dynamic probability curves favor early-scale participation while
+              protecting global liquidity at high input tiers.
+            </p>
+          </article>
+        </div>
+      </header>
+
+      <section class="dashboard__stats" aria-labelledby="stats-heading">
+        <h2 id="stats-heading" class="section-title">System Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-card stat-card--featured">
+            <div class="stat-card__label">Global Efficiency Rate</div>
+            <div class="stat-card__value">50.25%</div>
+            <div class="stat-card__sub">Network-wide throughput benchmark (static)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Low-tier event success</div>
+            <div class="stat-card__value">35%</div>
+            <div class="stat-card__sub">Input &lt; $100,000</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">High-tier event success</div>
+            <div class="stat-card__value">10%</div>
+            <div class="stat-card__sub">Input ≥ $100,000</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Premium activation</div>
+            <div class="stat-card__value" style="font-size: 1.5rem">$20,000</div>
+            <div class="stat-card__sub">One-time verification unlock</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard__plinko" aria-labelledby="plinko-heading">
+        <h2 id="plinko-heading" class="section-title">Reward Visualizer</h2>
+        <div class="plinko-stage">
+          <div class="plinko-stage__header">
+            <h3 class="plinko-stage__title">Plinko-style physics board</h3>
+            <span class="plinko-stage__badge">Live preview</span>
+          </div>
+
+          <div class="plinko-canvas" role="img" aria-label="Plinko peg board layout with prize bins">
+            <div class="plinko-drop" aria-hidden="true"></div>
+            <div class="plinko-pegs">
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+              <div class="plinko-row">
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+                <span class="plinko-peg"></span>
+              </div>
+            </div>
+            <div class="plinko-bins">
+              <div class="plinko-bin">0.2×</div>
+              <div class="plinko-bin">0.5×</div>
+              <div class="plinko-bin">1×</div>
+              <div class="plinko-bin">1.5×</div>
+              <div class="plinko-bin plinko-bin--jackpot">5×</div>
+              <div class="plinko-bin">1.5×</div>
+              <div class="plinko-bin">1×</div>
+              <div class="plinko-bin">0.5×</div>
+              <div class="plinko-bin">0.2×</div>
+            </div>
+          </div>
+
+          <p class="plinko-stage__footer">
+            Wire <code>EconomyManager.resolveRewardEvent(inputValue)</code> to bin outcomes;
+            attach a physics engine (Matter.js / Cannon) to the peg layer for production drops.
+          </p>
+        </div>
+      </section>
+
+      <div class="dashboard__cta">
+        <button type="button" class="btn btn--primary">Launch console</button>
+        <button type="button" class="btn btn--ghost">View access gate docs</button>
+      </div>
+    </div>
+  </body>
+</html>

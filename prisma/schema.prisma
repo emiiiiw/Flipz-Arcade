@@ -1,0 +1,284 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// —— Player session (wallet + profile) ——
+model Session {
+  id             String    @id @default(uuid())
+  routing        String    @unique
+  displayName    String
+  balance        Int       @default(0)
+  totalDeposited Int       @default(0)
+  totalWagered   Int       @default(0)
+  totalWon       Int       @default(0)
+  isVerified     Boolean   @default(false)
+  vipTier        String    @default("bronze")
+  suspicionScore Int       @default(0)
+  createdAt      DateTime  @default(now())
+  lastActiveAt   DateTime  @updatedAt
+
+  bets                 Bet[]
+  payments             Payment[]
+  higherGames          HigherLowerGame[]
+  crossyRuns           CrossyRun[]
+  gameRounds           GameRound[]
+  walletTransactions   WalletTransaction[]
+  inventory            InventoryItem[]
+  withdrawalRequests   WithdrawalRequest[]
+  requestNonces        RequestNonce[]
+  vipStatus            VipStatus?
+  packOpens            PackOpen[]
+}
+
+model Bet {
+  id          String   @id @default(uuid())
+  sessionId   String
+  game        String
+  amount      Int
+  outcome     String
+  payout      Int
+  houseProfit Int      @default(0)
+  multiplier  Float?
+  seedHash    String
+  seed        String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+  session     Session  @relation(fields: [sessionId], references: [id])
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  sessionId   String?
+  fleecaId    String   @unique
+  amount      Int
+  type        String
+  status      String
+  routing     String?
+  displayName String?
+  createdAt   DateTime @default(now())
+  session     Session? @relation(fields: [sessionId], references: [id])
+}
+
+model WalletTransaction {
+  id           String   @id @default(uuid())
+  sessionId    String
+  type         String
+  amount       Int
+  balanceAfter Int?
+  reference    String?
+  metadata     String?
+  createdAt    DateTime @default(now())
+  session      Session  @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId, createdAt])
+}
+
+model GameRound {
+  id          String      @id @default(uuid())
+  sessionId   String
+  game        String
+  wager       Int
+  outcome     String
+  payout      Int
+  houseProfit Int
+  multiplier  Float?
+  seed        String?
+  seedHash    String?
+  nonce       String?
+  metadata    String?
+  createdAt   DateTime    @default(now())
+  session     Session     @relation(fields: [sessionId], references: [id])
+  result      GameResult?
+
+  @@index([game, createdAt])
+  @@index([sessionId, createdAt])
+}
+
+model GameResult {
+  id        String    @id @default(uuid())
+  roundId   String    @unique
+  payload   String
+  createdAt DateTime  @default(now())
+  round     GameRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+}
+
+model EconomySetting {
+  id        String   @id @default(uuid())
+  gameKey   String   @unique
+  config    String
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}
+
+model CrashRound {
+  id         String    @id @default(uuid())
+  seedHash   String
+  seed       String?
+  crashPoint Float
+  startedAt  DateTime  @default(now())
+  endedAt    DateTime?
+}
+
+model HigherLowerGame {
+  id        String   @id @default(uuid())
+  sessionId String
+  deckJson  String
+  index     Int      @default(0)
+  round     Int      @default(0)
+  baseBet   Int
+  banked    Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  session   Session  @relation(fields: [sessionId], references: [id])
+}
+
+model CrossyRun {
+  id             String   @id @default(uuid())
+  sessionId      String
+  seed           String
+  seedHash       String
+  betAmount      Int
+  status         String   @default("active")
+  currentLane    Int      @default(0)
+  serverState    String?
+  laneTimestamps String?
+  createdAt      DateTime @default(now())
+  lastAdvanceAt  DateTime @default(now())
+  session        Session  @relation(fields: [sessionId], references: [id])
+}
+
+model VipStatus {
+  sessionId String   @id
+  tier      String   @default("bronze")
+  xp        Int      @default(0)
+  perks     String?
+  updatedAt DateTime @updatedAt
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model CardDefinition {
+  id            String          @id @default(uuid())
+  slug          String          @unique
+  name          String
+  rarity        String
+  season        String?
+  baseHoloRate  Float           @default(0.05)
+  perks         String?
+  inventory     InventoryItem[]
+  packPool      PackPoolEntry[]
+}
+
+model InventoryItem {
+  id            String         @id @default(uuid())
+  sessionId     String
+  cardId        String
+  serialNumber  Int
+  isHolographic Boolean        @default(false)
+  acquiredAt    DateTime       @default(now())
+  session       Session        @relation(fields: [sessionId], references: [id])
+  card          CardDefinition @relation(fields: [cardId], references: [id])
+
+  @@unique([cardId, serialNumber])
+  @@index([sessionId])
+}
+
+model PackDefinition {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  name        String
+  price       Int
+  season      String?
+  active      Boolean         @default(true)
+  pool        PackPoolEntry[]
+  opens       PackOpen[]
+}
+
+model PackPoolEntry {
+  id        String         @id @default(uuid())
+  packId    String
+  cardId    String
+  weight    Int
+  pack      PackDefinition @relation(fields: [packId], references: [id])
+  card      CardDefinition @relation(fields: [cardId], references: [id])
+}
+
+model PackOpen {
+  id         String         @id @default(uuid())
+  sessionId  String
+  packId     String
+  cardId     String
+  isHolo     Boolean
+  createdAt  DateTime       @default(now())
+  session    Session        @relation(fields: [sessionId], references: [id])
+  pack       PackDefinition @relation(fields: [packId], references: [id])
+}
+
+model Jackpot {
+  id               String    @id @default(uuid())
+  game             String    @unique
+  poolAmount       Int       @default(0)
+  contributionRate Float     @default(0.01)
+  lastWonAt        DateTime?
+  lastWinnerName   String?
+}
+
+model ActivityFeedEvent {
+  id            String   @id @default(uuid())
+  kind          String
+  displayName   String
+  message       String
+  amount        Int?
+  multiplier    Float?
+  isSynthetic   Boolean  @default(false)
+  priority      Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model WithdrawalRequest {
+  id        String   @id @default(uuid())
+  sessionId String
+  amount    Int
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  session   Session  @relation(fields: [sessionId], references: [id])
+
+  @@index([status, createdAt])
+}
+
+model RequestNonce {
+  id        String    @id @default(uuid())
+  sessionId String
+  nonce     String    @unique
+  action    String
+  usedAt    DateTime?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  session   Session   @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId, expiresAt])
+}
+
+model AdminLog {
+  id        String   @id @default(uuid())
+  adminUser String
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model AdminSession {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  username  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
