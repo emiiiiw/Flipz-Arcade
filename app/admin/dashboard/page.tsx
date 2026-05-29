@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { AppShell } from "@/components/AppShell";
 
 type Analytics = {
   totalDeposits: number;
@@ -72,14 +73,13 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0a0b0f] px-4 py-8 text-white">
-      <div className="mx-auto max-w-6xl">
-        <header className="flex flex-wrap items-center justify-between gap-4">
+    <AppShell className="max-w-6xl">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div>
             <h1 className="text-3xl font-semibold text-gold">Economy Control Panel</h1>
             <p className="text-sm text-white/50">RTP, volatility, jackpots, pause toggles</p>
           </div>
-          <Link href="/lobby" className="text-sm text-neon-cyan underline">
+          <Link href="/lobby" className="flipz-link">
             ← Arcade
           </Link>
         </header>
@@ -99,7 +99,7 @@ export default function AdminDashboardPage() {
         )}
 
         {analytics && (
-          <section className="glass-panel mt-6 rounded-xl border border-white/10 p-4">
+          <section className="flipz-glass-card-sm mt-6">
             <h2 className="text-lg font-medium text-gold">RTP &amp; profit by game</h2>
             <div className="mt-3 overflow-x-auto">
               <table className="w-full text-left text-sm">
@@ -128,7 +128,7 @@ export default function AdminDashboardPage() {
           </section>
         )}
 
-        <section className="glass-panel mt-8 rounded-xl border border-gold/20 p-4">
+        <section className="flipz-glass-card-sm mt-8 border-gold">
           <h2 className="text-lg font-medium text-gold">Live economy config</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {GAME_KEYS.map((k) => (
@@ -154,20 +154,19 @@ export default function AdminDashboardPage() {
           <button
             type="button"
             onClick={() => void save()}
-            className="mt-3 rounded-lg bg-neon-cyan px-4 py-2 font-semibold text-black"
+            className="flipz-btn-primary mt-3 px-4 py-2"
           >
             Apply live
           </button>
           {msg && <p className="mt-2 text-sm text-amber-200">{msg}</p>}
         </section>
-      </div>
-    </main>
+    </AppShell>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="glass-panel rounded-xl border border-white/10 p-4">
+    <div className="flipz-glass-card-sm">
       <p className="text-xs uppercase tracking-wide text-white/50">{label}</p>
       <p className="mt-1 text-xl font-semibold text-neon-cyan">{value}</p>
     </div>

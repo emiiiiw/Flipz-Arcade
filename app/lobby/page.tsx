@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { AppShell } from "@/components/AppShell";
 import { Wallet } from "@/components/Wallet";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { useSessionStore } from "@/store/session";
@@ -115,64 +116,61 @@ function LobbyInner() {
   }
 
   return (
-    <main className="min-h-screen px-4 pb-24 pt-8 md:px-10">
+    <AppShell className="max-w-5xl pb-28">
       <Wallet
         onDeposit={() => setDepositOpen(true)}
         onCashout={() => setCashoutOpen(true)}
       />
-      <header className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <div>
-          <h1 className="text-4xl font-bold">
-            <span className="bg-gradient-to-r from-flipz-pink to-flipz-cyan bg-clip-text text-transparent">
-              Flipz Arcade
-            </span>
-          </h1>
-          <p className="text-white/60">
-            Server-verified games with transparent seeds — play fair, play loud.
-          </p>
+      <header className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold md:text-5xl">
+              <span className="flipz-gradient-text">Flipz Arcade</span>
+            </h1>
+            <p className="mt-2 max-w-xl text-white/60">
+              Server-verified games with transparent seeds — play fair, play loud.
+            </p>
+          </div>
+          <nav className="flex flex-wrap gap-4">
+            <Link href="/verify" className="flipz-link">
+              Provably fair
+            </Link>
+            <Link href="/inventory" className="flipz-link">
+              Inventory
+            </Link>
+            <Link href="/house-rules" className="flipz-link">
+              House rules
+            </Link>
+          </nav>
         </div>
-        <nav className="flex flex-wrap gap-3 text-sm">
-          <Link href="/verify" className="text-flipz-cyan underline">
-            Provably fair
-          </Link>
-          <Link href="/inventory" className="text-flipz-cyan underline">
-            Inventory
-          </Link>
-          <Link href="/house-rules" className="text-flipz-cyan underline">
-            House rules
-          </Link>
-        </nav>
         <ActivityFeed />
       </header>
 
-      <section className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-2">
+      <section className="mt-12 grid gap-6 md:grid-cols-2">
         {games.map((g) => (
-          <motion.div
+          <motion.article
             key={g.href}
             whileHover={{ y: -4 }}
-            className="rounded-2xl border border-white/10 bg-flipz-panel/70 p-6 shadow-lg"
+            className="flipz-glass-card transition hover:border-flipz-cyan/30"
           >
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-xl font-semibold">{g.title}</h2>
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-300">
+              <span className="rounded-full border border-flipz-cyan/30 bg-flipz-cyan/10 px-3 py-1 text-xs font-medium text-flipz-cyan">
                 {g.tag}
               </span>
             </div>
-            <p className="mt-2 text-sm text-white/60">{g.blurb}</p>
-            <p className="mt-3 text-xs text-white/40">{g.range}</p>
-            <Link
-              href={g.href}
-              className="mt-4 inline-block rounded-lg bg-flipz-pink px-4 py-2 text-sm font-semibold text-black"
-            >
+            <p className="mt-3 text-sm leading-relaxed text-white/65">{g.blurb}</p>
+            <p className="mt-3 text-xs uppercase tracking-wide text-white/40">{g.range}</p>
+            <Link href={g.href} className="flipz-btn-primary mt-5 px-5 py-2">
               Play
             </Link>
-          </motion.div>
+          </motion.article>
         ))}
       </section>
 
       {cashoutOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md rounded-xl border border-white/10 bg-flipz-panel p-6">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="flipz-glass-card w-full max-w-md">
             <h3 className="text-lg font-semibold">Cash out</h3>
             <p className="mt-3 text-sm text-white/80">
               Cashouts are not currently implemented, contact support for a site credit or
@@ -181,7 +179,7 @@ function LobbyInner() {
             <button
               type="button"
               onClick={() => setCashoutOpen(false)}
-              className="mt-6 w-full rounded-lg bg-flipz-cyan py-2.5 font-medium text-black"
+              className="flipz-btn-primary mt-6 w-full"
             >
               Got it
             </button>
@@ -190,15 +188,15 @@ function LobbyInner() {
       )}
 
       {depositOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-sm rounded-xl border border-white/10 bg-flipz-panel p-6">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="flipz-glass-card w-full max-w-sm">
             <h3 className="text-lg font-semibold">Deposit</h3>
             <p className="mt-1 text-sm text-white/60">
               Min $20,000 · Max $500,000 — opens Fleeca checkout.
             </p>
             <input
               type="number"
-              className="mt-4 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2"
+              className="flipz-input mt-4"
               value={depAmount}
               min={20_000}
               max={500_000}
@@ -208,7 +206,7 @@ function LobbyInner() {
               <button
                 type="button"
                 onClick={() => setDepositOpen(false)}
-                className="flex-1 rounded-lg border border-white/20 py-2"
+                className="flipz-btn-ghost flex-1"
               >
                 Cancel
               </button>
@@ -216,7 +214,7 @@ function LobbyInner() {
                 type="button"
                 disabled={depBusy}
                 onClick={() => void doDeposit()}
-                className="flex-1 rounded-lg bg-flipz-cyan py-2 font-medium text-black"
+                className="flipz-btn-primary flex-1 py-2"
               >
                 {depBusy ? "…" : "Open Fleeca"}
               </button>
@@ -224,13 +222,19 @@ function LobbyInner() {
           </div>
         </div>
       )}
-    </main>
+    </AppShell>
   );
 }
 
 export default function LobbyPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-white/60">Loading…</div>}>
+    <Suspense
+      fallback={
+        <AppShell centered>
+          <p className="text-white/60">Loading lobby…</p>
+        </AppShell>
+      }
+    >
       <LobbyInner />
     </Suspense>
   );

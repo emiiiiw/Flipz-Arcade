@@ -115,7 +115,7 @@ export function ActivityFeed() {
   }, [load]);
 
   return (
-    <aside className="glass-panel w-full max-w-sm overflow-hidden rounded-xl border border-gold/20">
+    <aside className="flipz-glass-card-sm w-full max-w-sm overflow-hidden border-gold/30">
       <div className="border-b border-white/10 bg-black/40 px-4 py-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-gold">Live activity</p>
       </div>

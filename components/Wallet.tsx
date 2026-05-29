@@ -15,7 +15,7 @@ export function Wallet({ onDeposit, onCashout }: Props) {
   const net = totalWon - totalWagered;
 
   return (
-    <div className="fixed right-4 top-4 z-50 w-72 rounded-xl border border-white/10 bg-flipz-panel/95 p-4 shadow-xl backdrop-blur">
+    <div className="fixed right-4 top-4 z-50 w-72 flipz-glass-card-sm shadow-neon-sm">
       <div className="flex items-center justify-between gap-2">
         <div>
           <p className="text-xs uppercase tracking-wide text-white/50">Balance</p>
@@ -27,14 +27,14 @@ export function Wallet({ onDeposit, onCashout }: Props) {
           <button
             type="button"
             onClick={onDeposit}
-            className="rounded-lg bg-flipz-pink px-3 py-1.5 text-sm font-medium text-black"
+            className="flipz-btn-primary px-3 py-1.5 text-sm"
           >
             Deposit
           </button>
           <button
             type="button"
             onClick={onCashout}
-            className="rounded-lg border border-flipz-cyan/60 px-2.5 py-1.5 text-xs font-semibold leading-snug text-flipz-cyan"
+            className="flipz-btn-secondary px-2.5 py-1.5 text-xs leading-snug"
           >
             Cash out instantly
           </button>
@@ -70,7 +70,7 @@ export function Wallet({ onDeposit, onCashout }: Props) {
       </details>
       <Link
         href="/house-rules"
-        className="mt-3 block text-center text-xs text-flipz-cyan underline"
+        className="flipz-link mt-3 block text-center text-xs"
       >
         House rules
       </Link>

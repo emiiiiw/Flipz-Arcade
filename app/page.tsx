@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { AppShell } from "@/components/AppShell";
 import { VERIFY_AMOUNT } from "@/lib/constants";
 import { errorMessageFromBody, isSuccessBody, safeJson } from "@/lib/safeJson";
 
@@ -103,16 +104,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <motion.div
+    <AppShell centered>
+      <motion.main
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-2xl border border-white/10 bg-flipz-panel/80 p-8 neon-border"
+        className="flipz-glass-card neon-border w-full max-w-md p-8"
       >
         <h1 className="text-center text-4xl font-bold tracking-tight">
-          <span className="bg-gradient-to-r from-flipz-pink to-flipz-cyan bg-clip-text text-transparent">
-            Flipz Arcade
-          </span>
+          <span className="flipz-gradient-text">Flipz Arcade</span>
         </h1>
         <p className="mt-2 text-center text-sm text-white/60">
           Fair tables · Provably fair seeds · Fleeca-backed balances
@@ -142,7 +141,7 @@ export default function LoginPage() {
         <label className="mt-6 block text-sm text-white/70">
           Fleeca routing number
           <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 outline-none ring-flipz-cyan focus:ring-2"
+            className="flipz-input"
             value={routing}
             onChange={(e) => setRouting(e.target.value)}
             placeholder="123456789"
@@ -157,7 +156,7 @@ export default function LoginPage() {
               type="button"
               disabled={busy || !routing.trim()}
               onClick={() => void verifyNew()}
-              className="mt-6 w-full rounded-xl bg-gradient-to-r from-flipz-pink to-flipz-cyan py-3 text-lg font-semibold text-black disabled:opacity-40"
+              className="flipz-btn-primary mt-6 w-full py-3 text-lg"
             >
               {busy ? "Working…" : "Verify with Fleeca"}
             </button>
@@ -171,7 +170,7 @@ export default function LoginPage() {
             type="button"
             disabled={busy || !routing.trim()}
             onClick={() => void loginReturn()}
-            className="mt-6 w-full rounded-xl border border-flipz-cyan py-3 text-lg font-semibold text-flipz-cyan disabled:opacity-40"
+            className="flipz-btn-secondary mt-6 w-full py-3 text-lg"
           >
             {busy ? "Signing in…" : "Continue to lobby"}
           </button>
@@ -181,13 +180,10 @@ export default function LoginPage() {
           <p className="mt-4 text-center text-sm text-rose-400">{error}</p>
         )}
 
-        <Link
-          href="/house-rules"
-          className="mt-8 block text-center text-sm text-flipz-cyan underline"
-        >
+        <Link href="/house-rules" className="flipz-link mt-8 block text-center">
           House rules
         </Link>
-      </motion.div>
-    </main>
+      </motion.main>
+    </AppShell>
   );
 }

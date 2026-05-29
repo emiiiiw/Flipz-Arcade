@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AppShell } from "@/components/AppShell";
 import {
   CASHOUT_FEE_FLAT,
   MIN_CASHOUT_GROSS,
@@ -7,12 +8,14 @@ import {
 
 export default function HouseRulesPage() {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-16">
-      <Link href="/lobby" className="text-sm text-flipz-cyan underline">
+    <AppShell className="max-w-2xl">
+      <Link href="/lobby" className="flipz-link">
         ← Lobby
       </Link>
-      <h1 className="mt-6 text-3xl font-bold text-flipz-pink">Flipz Arcade — House Rules</h1>
-      <div className="mt-8 space-y-6 text-white/80">
+      <h1 className="mt-6 text-3xl font-bold">
+        <span className="flipz-gradient-text">Flipz Arcade — House Rules</span>
+      </h1>
+      <div className="flipz-glass-card mt-8 space-y-6 text-white/80">
         <section>
           <h2 className="text-xl font-semibold text-white">How games work</h2>
           <ul className="mt-2 list-disc space-y-2 pl-5">
@@ -40,7 +43,7 @@ export default function HouseRulesPage() {
             Crash publishes a <strong>SHA-256 hash</strong> of the seed before bets close;
             the seed is revealed when the round ends. Coin flip records seed + hash for
             audit. Crossy publishes lane layouts from the seed hash before you move. Use{" "}
-            <Link href="/verify" className="text-flipz-cyan underline">
+            <Link href="/verify" className="flipz-link">
               /verify
             </Link>{" "}
             to recompute outcomes from published values.
@@ -82,6 +85,6 @@ export default function HouseRulesPage() {
           </p>
         </section>
       </div>
-    </main>
+    </AppShell>
   );
 }

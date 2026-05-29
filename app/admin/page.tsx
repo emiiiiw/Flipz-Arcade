@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AppShell } from "@/components/AppShell";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -28,17 +29,17 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0a0b0f] px-4">
+    <AppShell centered>
       <form
         onSubmit={(e) => void submit(e)}
-        className="glass-panel w-full max-w-md rounded-2xl border border-gold/30 p-8"
+        className="flipz-glass-card neon-border w-full max-w-md border-gold/30 p-8"
       >
         <h1 className="text-2xl font-semibold text-gold">Flipz Admin</h1>
         <p className="mt-1 text-sm text-white/50">Economy control &amp; analytics</p>
         <label className="mt-6 block text-sm text-white/70">
           Username
           <input
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/50 px-3 py-2"
+            className="flipz-input"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
@@ -48,7 +49,7 @@ export default function AdminLoginPage() {
           Password
           <input
             type="password"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/50 px-3 py-2"
+            className="flipz-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
@@ -58,7 +59,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={busy}
-          className="mt-6 w-full rounded-lg bg-gradient-to-r from-gold to-amber-600 py-2.5 font-semibold text-black disabled:opacity-50"
+          className="flipz-btn-primary mt-6 w-full from-gold to-amber-600 bg-gradient-to-r disabled:opacity-50"
         >
           {busy ? "Signing in…" : "Sign in"}
         </button>
@@ -66,6 +67,6 @@ export default function AdminLoginPage() {
           Set ADMIN_USERNAME and ADMIN_PASSWORD in environment variables.
         </p>
       </form>
-    </main>
+    </AppShell>
   );
 }

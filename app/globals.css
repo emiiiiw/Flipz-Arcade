@@ -5,38 +5,83 @@
 @layer base {
   :root {
     --gold: #d4af37;
-    --neon-cyan: #00e5ff;
+    --neon-cyan: #00f5ff;
+    --neon-pink: #ff2d95;
+    --flipz-dark: #0a0a12;
+    --flipz-panel: #12121c;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply min-h-screen bg-flipz-dark bg-flipz-radial bg-fixed font-display text-white;
   }
 }
 
 @layer components {
+  .flipz-page-bg {
+    @apply relative min-h-screen;
+  }
+
+  .flipz-page-glow {
+    @apply pointer-events-none fixed inset-0 -z-10 bg-flipz-radial opacity-90;
+  }
+
+  .flipz-shell {
+    @apply relative mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-10 md:pt-10;
+  }
+
+  .flipz-glass-card {
+    @apply rounded-2xl border border-white/10 bg-flipz-panel/75 p-6 shadow-neon-sm backdrop-blur-xl;
+  }
+
+  .flipz-glass-card-sm {
+    @apply rounded-xl border border-white/10 bg-flipz-panel/80 p-4 shadow-lg backdrop-blur-xl;
+  }
+
   .glass-panel {
     @apply bg-white/5 backdrop-blur-xl;
   }
+
   .text-gold {
     color: var(--gold);
   }
+
   .text-neon-cyan {
     color: var(--neon-cyan);
   }
+
   .border-gold {
     border-color: color-mix(in srgb, var(--gold) 40%, transparent);
   }
-}
 
-:root {
-  --neon-pink: #ff2d95;
-  --neon-cyan: #00f5ff;
-}
+  .neon-border {
+    @apply shadow-neon;
+  }
 
-body {
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 45, 149, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 245, 255, 0.08), transparent);
-}
+  .flipz-gradient-text {
+    @apply bg-gradient-to-r from-flipz-pink to-flipz-cyan bg-clip-text text-transparent;
+  }
 
-.neon-border {
-  box-shadow:
-    0 0 20px rgba(255, 45, 149, 0.35),
-    0 0 40px rgba(0, 245, 255, 0.15);
+  .flipz-btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-flipz-pink to-flipz-cyan px-6 py-3 text-sm font-semibold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .flipz-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-flipz-cyan/60 bg-transparent px-6 py-3 text-sm font-semibold text-flipz-cyan transition hover:border-flipz-cyan hover:bg-flipz-cyan/10 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .flipz-btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10;
+  }
+
+  .flipz-input {
+    @apply mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-white outline-none ring-flipz-cyan transition placeholder:text-white/30 focus:ring-2;
+  }
+
+  .flipz-link {
+    @apply text-sm text-flipz-cyan underline decoration-flipz-cyan/40 underline-offset-4 transition hover:text-white hover:decoration-flipz-cyan;
+  }
 }

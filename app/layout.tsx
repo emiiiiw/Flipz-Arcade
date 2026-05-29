@@ -5,6 +5,7 @@ import "./globals.css";
 const space = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -18,10 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={space.variable}>
-      <body className="min-h-screen bg-flipz-dark font-display text-white antialiased">
-        {children}
-      </body>
+    <html lang="en" className={`${space.variable} ${space.className}`}>
+      <body className="min-h-screen antialiased">{children}</body>
     </html>
   );
 }
