@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useSessionStore } from "@/store/session";
-import { COINFLIP_WIN_RETURN_MULT, MIN_BET, MAX_BET } from "@/lib/constants";
+import { MIN_BET, MAX_BET } from "@/lib/constants";
 
 const chips = [20_000, 50_000, 100_000, 250_000, 500_000];
 
@@ -101,8 +101,8 @@ export function CoinFlipGame() {
       </button>
       {last && <p className="text-center text-lg text-white">{last}</p>}
       <p className="text-center text-xs text-white/50">
-        True 50/50 via <code>crypto</code> — win returns {COINFLIP_WIN_RETURN_MULT}× your
-        wager (~30% house edge).
+        True 50-50 chance on every flip — outcomes are server-verified with{" "}
+        <code>crypto</code>.
       </p>
     </div>
   );

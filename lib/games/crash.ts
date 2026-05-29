@@ -11,7 +11,7 @@ export function generateCrashPoint(seed: string, roundId: string): number {
   const digest = hmac.digest();
   const n = digest.readUInt32BE(0) / 0x1_0000_0000;
   const u = Math.max(n, 1e-9);
-  const house = 0.3;
+  const house = 0.35;
   if (u < house) return 1.0;
   const adjustedU = (u - house) / (1 - house);
   const raw = (1 - house) / (1 - adjustedU);

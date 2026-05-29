@@ -111,7 +111,7 @@ export function CrossyGame() {
           }
           setPlayer({ row: nextRow, col: player.col });
           if (data.payoutMultiplier) {
-            setMsg(`Lane ${lane + 1} — bank ${data.payoutMultiplier}×`);
+            setMsg(`Lane ${lane + 1} cleared`);
           }
           if (nextRow === 0) {
             await settle(true);
@@ -167,7 +167,7 @@ export function CrossyGame() {
     patchBalance(data.newBalance);
     setMsg(
       data.outcome === "win"
-        ? `Settled — $${data.payout.toLocaleString()} (${data.multiplier}×)`
+        ? `Settled — $${data.payout.toLocaleString()}`
         : "Run closed",
     );
   }
@@ -179,7 +179,7 @@ export function CrossyGame() {
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-flipz-cyan">Crossy</h1>
       <p className="text-sm text-white/50">
-        Outcomes validated server-side · lane payouts up to 15×
+        Get paid based on your skill — outcomes validated server-side.
       </p>
       <div
         className={`mt-4 overflow-hidden rounded-xl border border-white/10 ${shake ? "animate-pulse" : ""}`}

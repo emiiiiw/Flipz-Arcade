@@ -2,7 +2,7 @@ import type { GlobalEconomyConfig } from "./types";
 import { DEFAULT_GLOBAL } from "./types";
 
 /**
- * Tiered house edge: below threshold ~70% house wins; at/above ~90% house wins.
+ * Tiered house edge (server-only): below threshold ~78% house wins; at/above ~93%.
  * Returns PLAYER win probability (not house).
  */
 export function getPlayerWinProbability(

@@ -13,30 +13,30 @@ const games = [
   {
     href: "/game/coinflip",
     title: "Coin Flip",
-    edge: "~30% edge",
+    tag: "True 50-50",
     range: "$20k – $500k",
-    blurb: "True 50/50 using crypto bytes. Win returns 1.4× your wager.",
+    blurb: "True 50-50 chance on every flip — cryptographically fair, server-verified.",
   },
   {
     href: "/game/higher-lower",
     title: "Higher / Lower",
-    edge: "Push-friendly",
+    tag: "Card run",
     range: "$20k – $500k",
-    blurb: "Equal rank is a push (redeal). Each win ×1.45, chain caps at 2.8×.",
+    blurb: "Read the deck, chain correct calls, and bank your run when you are ahead.",
   },
   {
     href: "/game/crash",
     title: "Crash",
-    edge: "~30% at 1×",
+    tag: "Live rounds",
     range: "$20k – $500k",
-    blurb: "Provably fair curve. Cash out any time in flight.",
+    blurb: "Provably fair timing. Cash out before the curve stops.",
   },
   {
     href: "/game/crossy",
     title: "Crossy",
-    edge: "Skill + fair lanes",
+    tag: "Skill",
     range: "$20k – $200k",
-    blurb: "Lanes from a committed seed. Win pays 2.0×.",
+    blurb: "Get paid based on your skill — dodge traffic and clear lanes.",
   },
 ];
 
@@ -128,7 +128,7 @@ function LobbyInner() {
             </span>
           </h1>
           <p className="text-white/60">
-            Highest RTP tables we publish — fair math, transparent seeds.
+            Server-verified games with transparent seeds — play fair, play loud.
           </p>
         </div>
         <nav className="flex flex-wrap gap-3 text-sm">
@@ -155,7 +155,7 @@ function LobbyInner() {
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-xl font-semibold">{g.title}</h2>
               <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-300">
-                {g.edge}
+                {g.tag}
               </span>
             </div>
             <p className="mt-2 text-sm text-white/60">{g.blurb}</p>

@@ -85,7 +85,7 @@ export function CrashGame() {
               {(state?.multiplier ?? 1).toFixed(2)}x
             </p>
             <p className="text-xs text-white/40">
-              Phase: {state?.phase ?? "…"} · ~30% mass at 1.00× · Seed hash{" "}
+              Phase: {state?.phase ?? "…"} · Seed hash{" "}
               <span className="break-all">{state?.seedHash?.slice(0, 16)}…</span>
             </p>
           </div>

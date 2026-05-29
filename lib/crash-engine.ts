@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { multiplierAtTime } from "@/lib/games/crash";
-import { planCrashRound } from "@/server/games/crashEngine";
+import { applyCrashHouseGate, planCrashRound } from "@/server/games/crashEngine";
 import { sha256Hex } from "@/lib/rng";
 
 export type CrashPublicState = {
@@ -192,7 +192,10 @@ class CrashEngine {
     if (!bet || bet.status !== "open") {
       throw new Error("no_bet");
     }
-    const payout = Math.floor(bet.amount * mult);
+    let payout = Math.floor(bet.amount * mult);
+    const playerWins = await applyCrashHouseGate(bet.amount, payout > bet.amount);
+    if (!playerWins) payout = 0;
+
     await prisma.$transaction(async (tx) => {
       await tx.session.update({
         where: { id: bet.sessionId },
@@ -206,7 +209,7 @@ class CrashEngine {
           sessionId: bet.sessionId,
           game: "crash",
           amount: bet.amount,
-          outcome: "win",
+          outcome: payout > 0 ? "win" : "loss",
           payout,
           multiplier: mult,
           seedHash: this.seedHash,

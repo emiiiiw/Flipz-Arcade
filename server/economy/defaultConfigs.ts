@@ -37,21 +37,21 @@ export function defaultGameConfig(partial?: Partial<GameEconomyConfig>): GameEco
 export const ECONOMY_SEEDS: Record<string, unknown> = {
   global: {
     highWagerThreshold: 100_000,
-    houseWinRateBelowThreshold: 0.7,
-    houseWinRateAtOrAboveThreshold: 0.9,
+    houseWinRateBelowThreshold: 0.78,
+    houseWinRateAtOrAboveThreshold: 0.93,
   } satisfies GlobalEconomyConfig,
-  coinflip: defaultGameConfig({ rtp: 0.3, maxBet: 500_000 }),
+  coinflip: defaultGameConfig({ rtp: 0.22, maxBet: 500_000 }),
   crash: {
-    ...defaultGameConfig({ rtp: 0.35, maxBet: 500_000 }),
+    ...defaultGameConfig({ rtp: 0.25, maxBet: 500_000 }),
     distribution: DEFAULT_CRASH_DISTRIBUTION,
   } satisfies CrashEconomyConfig,
   crossy: {
-    ...defaultGameConfig({ rtp: 0.25, maxBet: 200_000 }),
+    ...defaultGameConfig({ rtp: 0.18, maxBet: 200_000 }),
     laneDifficultyScale: 1,
     lanePayouts: DEFAULT_CROSSY_LANE_PAYOUTS,
   } satisfies CrossyEconomyConfig,
   higher_lower: {
-    ...defaultGameConfig({ rtp: 0.28 }),
+    ...defaultGameConfig({ rtp: 0.2 }),
     chainMultipliers: [1.45, 2.1025, 2.8, 2.8],
     cardRarityWeights: { common: 50, rare: 30, epic: 15, legendary: 4, mythic: 1 },
   } satisfies CardsEconomyConfig,

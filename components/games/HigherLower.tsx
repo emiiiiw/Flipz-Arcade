@@ -178,8 +178,7 @@ export function HigherLowerGame() {
         </label>
         {msg && <p className="mt-4 text-sm text-amber-200">{msg}</p>}
         <p className="mt-4 text-xs text-white/45">
-          Each win multiplies the bank by 1.45×; the chain caps at 2.8×. Equal rank = push
-          (free next card).
+          Equal rank is a push (free next card). Bank your run anytime.
         </p>
         <div className="mt-6 flex flex-wrap gap-2 text-xs text-white/50">
           {history.map((c, i) => (
